@@ -20,6 +20,7 @@ class Version20160317161732 extends AbstractMigration
     const ACCESS_TOKEN = 'AccessToken';
     const USER = 'User';
     const CLIENT = 'Client';
+    const CLIENT_SCOPE = 'ClientScope';
 
     /**
      * @param Schema $schema
@@ -35,7 +36,8 @@ class Version20160317161732 extends AbstractMigration
             self::REFRESH_TOKEN,
             self::ACCESS_TOKEN,
             self::USER,
-            self::CLIENT
+            self::CLIENT,
+            self::CLIENT_SCOPE
         );
 
         // this up() migration is auto-generated, please modify it to your needs
@@ -45,13 +47,24 @@ class Version20160317161732 extends AbstractMigration
             $metadatas[] = $em->getMetadataFactory()->getMetadataFor('\\Plugin\\EccubeApi\\Entity\\OAuth2\\'.$class);
         }
         $schemaTool = new \Doctrine\ORM\Tools\SchemaTool($em);
-        // $schemaTool->dropSchema($metadatas);
         $schemaTool->createSchema($metadatas);
 
-        $scopes = array('read', 'write', 'openid', 'offline_access');
-        foreach ($scopes as $scope) {
+        $scopes = array(
+            'read' => '読み込み',
+            'write' => '書き込み',
+            'openid' => 'OpenID Connect 認証',
+            'offline_access' => 'オフラインアクセス',
+            'profile' => 'プロフィール情報',
+            'email' => 'メールアドレス',
+            'address' => '住所',
+            'phone' => '電話番号'
+        );
+        foreach ($scopes as $scope => $label) {
             $Scope = new \Plugin\EccubeApi\Entity\OAuth2\Scope();
             $Scope->setScope($scope);
+            $Scope->setLabel($label);
+            $Scope->setCustomerFlg(1);
+            $Scope->setMemberFlg(1);
             $Scope->setDefault(true);
             $em->persist($Scope);
         }
@@ -74,10 +87,13 @@ class Version20160317161732 extends AbstractMigration
             'plg_oauth2_openid_public_key',
             'plg_oauth2_openid_userinfo',
             'plg_oauth2_openid_userinfo_address',
-            'plg_oauth2_scope'
+            'plg_oauth2_scope',
+            'plg_oauth2_client_scope',
         );
         foreach ($tables as $table) {
-            $schema->dropTable($table);
+            if ($schema->hasTable($table)) {
+                $schema->dropTable($table);
+            }
         }
 
         if ($this->connection->getDatabasePlatform()->getName() == "postgresql") {

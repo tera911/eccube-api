@@ -12,9 +12,29 @@ Plugin\EccubeApi\Entity\OAuth2\Scope:
       type:   string
       length: 80
       unique: true
+    label:
+      type:   string
+      length: 80
+      nullable: true
     is_default:
       type:   boolean
+    customer_flg:
+      type: smallint
+      nullable: false
+      options:
+        default: '0'
+        unsigned: false
+    member_flg:
+      type: smallint
+      nullable: false
+      options:
+        default: '1'
+        unsigned: false
   indexes:
     plg_oauth2_scope_index:
       columns:
           - scope
+  oneToMany:
+    ClientScope:
+        targetEntity: Plugin\EccubeApi\Entity\OAuth2\ClientScope
+        mappedBy: Scope

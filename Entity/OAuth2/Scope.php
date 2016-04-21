@@ -20,10 +20,37 @@ class Scope extends \Eccube\Entity\AbstractEntity
     private $scope;
 
     /**
+     * @var string
+     */
+    private $label;
+
+    /**
      * @var boolean
      */
     private $is_default;
 
+    /**
+     * @var integer
+     */
+    private $customer_flg = '0';
+
+    /**
+     * @var integer
+     */
+    private $member_flg = '1';
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $ClientScope;
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->ClientScope = new \Doctrine\Common\Collections\ArrayCollection();
+    }
 
     /**
      * Get id
@@ -59,12 +86,35 @@ class Scope extends \Eccube\Entity\AbstractEntity
     }
 
     /**
+     * Set label
+     *
+     * @param string $label
+     * @return Scope
+     */
+    public function setLabel($label)
+    {
+        $this->label = $label;
+
+        return $this;
+    }
+
+    /**
+     * Get label
+     *
+     * @return string
+     */
+    public function getLabel()
+    {
+        return $this->label;
+    }
+
+    /**
      * Set is_default
      *
      * @param boolean $isDefault
      * @return Scope
      */
-    public function setIsDefault($isDefault)
+    public function setDefault($isDefault)
     {
         $this->is_default = $isDefault;
 
@@ -76,18 +126,92 @@ class Scope extends \Eccube\Entity\AbstractEntity
      *
      * @return boolean
      */
-    public function getIsDefault()
+    public function getDefault()
     {
         return $this->is_default;
     }
 
-    public function setDefault($default)
-    {
-        return $this->setIsDefault($default);
-    }
-
     public function isDefault()
     {
-        return $this->getIsDefault();
+        return $this->is_default;
+    }
+
+    /**
+     * Set customer_flg
+     *
+     * @param integer $customerFlg
+     * @return Scope
+     */
+    public function setCustomerFlg($customerFlg)
+    {
+        $this->customer_flg = $customerFlg;
+
+        return $this;
+    }
+
+    /**
+     * Get customer_flg
+     *
+     * @return integer
+     */
+    public function getCustomerFlg()
+    {
+        return $this->customer_flg;
+    }
+
+    /**
+     * Set member_flg
+     *
+     * @param integer $memberFlg
+     * @return Scope
+     */
+    public function setMemberFlg($memberFlg)
+    {
+        $this->member_flg = $memberFlg;
+
+        return $this;
+    }
+
+    /**
+     * Get member_flg
+     *
+     * @return integer
+     */
+    public function getMemberFlg()
+    {
+        return $this->member_flg;
+    }
+
+    /**
+     * Add ClientScope
+     *
+     * @param \Plugin\EccubeApi\Entity\OAuth2\ClientScope $clientScope
+     * @return Scope
+     */
+    public function addClientScope(\Plugin\EccubeApi\Entity\OAuth2\ClientScope $clientScope)
+    {
+        $this->ClientScope[] = $clientScope;
+
+        return $this;
+    }
+
+    /**
+     * Remove ClientScope
+     *
+     * @param \Plugin\EccubeApi\Entity\OAuth2\ClientScope $clientScope
+     */
+    public function removeClientScope(\Plugin\EccubeApi\Entity\OAuth2\ClientScope $clientScope)
+    {
+        $this->ClientScope->removeElement($clientScope);
+    }
+
+    /**
+     * Get ClientScope
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getClientScope()
+    {
+        return $this->ClientScope;
     }
 }
